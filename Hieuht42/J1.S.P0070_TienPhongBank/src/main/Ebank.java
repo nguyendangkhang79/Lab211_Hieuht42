@@ -1,16 +1,44 @@
 package main;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 import java.util.ResourceBundle;
-import java.util.Scanner;
+import model.Account;
 import utils.IConstant;
+import utils.Validate;
 
 public class Ebank {
-    private ResourceBundle bundle;
-    private final Scanner scanner = new Scanner(System.in);
 
-    // Function 1: Convert the languages[cite: 1]
+    private ResourceBundle bundle;
+    private final List<Account> accounts = new ArrayList<>();
+
+    public Ebank() {
+        addAccount("0123456789", "abc12345");
+        addAccount("1234567890", "tpbank2026");
+        addAccount("9876543210", "ebank1234");
+    }
+
+    private boolean addAccount(String accountNumber, String password) {
+        if (!accountNumber.matches(IConstant.ACCOUNT_NUMBER)
+                || !password.matches(IConstant.PASSWORD)
+                || findAccount(accountNumber) != null) {
+            return false;
+        }
+        accounts.add(new Account(accountNumber, password));
+        return true;
+    }
+
+    private Account findAccount(String accountNumber) {
+        for (Account account : accounts) {
+            if (account.getAccountNumber().equals(accountNumber)) {
+                return account;
+            }
+        }
+        return null;
+    }
+
     public void setLocate(Locale locale) {
         if (locale.getLanguage().equals("vi")) {
             bundle = ResourceBundle.getBundle("resources.Vi", locale);
@@ -19,75 +47,126 @@ public class Ebank {
         }
     }
 
-    // Function 2: Check the account number[cite: 1]
     public String checkAccountNumber(String accountNumber) {
         if (accountNumber.matches(IConstant.ACCOUNT_NUMBER)) {
-            return ""; 
+            return "";
         }
         return bundle.getString("accountInvalid");
     }
 
-    // Function 3: Check the password[cite: 1]
     public String checkPassword(String password) {
         if (password.matches(IConstant.PASSWORD)) {
-            return ""; 
+            return "";
         }
         return bundle.getString("passwordInvalid");
     }
 
-    // Function 4: Generate a random captcha code[cite: 1]
     public String generateCaptcha() {
         String alphaNumeric = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        StringBuilder captcha = new StringBuilder();
         Random random = new Random();
+        StringBuilder captcha = new StringBuilder();
         for (int i = 0; i < IConstant.CAPTCHA_LENGTH; i++) {
-            captcha.append(alphaNumeric.charAt(random.nextInt(alphaNumeric.length())));
+            char c = alphaNumeric.charAt(random.nextInt(alphaNumeric.length()));
+            captcha.append(c);
         }
         return captcha.toString();
     }
 
-    // Function 5: Check the captcha code[cite: 1]
     public String checkCaptcha(String captchaInput, String captchaGenerate) {
-        // Sử dụng contains() theo đúng Guideline để người dùng chỉ cần nhập 1 ký tự cũng pass[cite: 1]
-        if (captchaGenerate.contains(captchaInput)) {
-            return ""; 
+        if (!captchaInput.isEmpty() && captchaGenerate.contains(captchaInput)) {
+            return "";
         }
         return bundle.getString("captchaInvalid");
     }
 
-    // Function 6: Login luồng xử lý chính[cite: 1]
-    public void login() {
-        // Nhập Account[cite: 1]
-        String account;
+    public void showMenu() {
         while (true) {
-            System.out.print(bundle.getString("account") + " ");
-            account = scanner.nextLine().trim();
-            String errorMsg = checkAccountNumber(account);
-            if (errorMsg.isEmpty()) break;
-            System.out.println(errorMsg);
+            System.out.println(bundle.getString("menuTitle"));
+            System.out.println("1. " + bundle.getString("menuLogin"));
+            System.out.println("2. " + bundle.getString("menuCreate"));
+            System.out.println("3. " + bundle.getString("menuBack"));
+            int choice = Validate.getInt(bundle.getString("choice") + " ",
+                    bundle.getString("choiceNumber"),
+                    bundle.getString("choiceRange"), 1, 3);
+            switch (choice) {
+                case 1:
+                    login();
+                    break;
+                case 2:
+                    createAccount();
+                    break;
+                case 3:
+                    return;
+            }
+        }
+    }
+
+    public void login() {
+        Account account;
+        while (true) {
+            String accountNumber = Validate.getString(bundle.getString("account") + " ");
+            String error = checkAccountNumber(accountNumber);
+            if (error.isEmpty() && findAccount(accountNumber) == null) {
+                error = bundle.getString("accountNotExist");
+            }
+            if (error.isEmpty()) {
+                account = findAccount(accountNumber);
+                break;
+            }
+            System.out.println(error);
         }
 
-        // Nhập Password[cite: 1]
+        while (true) {
+            String password = Validate.getString(bundle.getString("password") + " ");
+            String error = checkPassword(password);
+            if (error.isEmpty() && !account.getPassword().equals(password)) {
+                error = bundle.getString("passwordWrong");
+            }
+            if (error.isEmpty()) {
+                break;
+            }
+            System.out.println(error);
+        }
+
+        String captchaGenerate = generateCaptcha();
+        System.out.println(bundle.getString("captcha") + " " + captchaGenerate);
+        while (true) {
+            String captchaInput = Validate.getString(bundle.getString("inputCaptcha") + " ");
+            String error = checkCaptcha(captchaInput, captchaGenerate);
+            if (error.isEmpty()) {
+                break;
+            }
+            System.out.println(error);
+        }
+
+        System.out.println(bundle.getString("loginSuccess"));
+    }
+
+    public void createAccount() {
+        String accountNumber;
+        while (true) {
+            accountNumber = Validate.getString(bundle.getString("account") + " ");
+            String error = checkAccountNumber(accountNumber);
+            if (error.isEmpty() && findAccount(accountNumber) != null) {
+                error = bundle.getString("accountExist");
+            }
+            if (error.isEmpty()) {
+                break;
+            }
+            System.out.println(error);
+        }
+
         String password;
         while (true) {
-            System.out.print(bundle.getString("password") + " ");
-            password = scanner.nextLine().trim();
-            String errorMsg = checkPassword(password);
-            if (errorMsg.isEmpty()) break;
-            System.out.println(errorMsg);
+            password = Validate.getString(bundle.getString("password") + " ");
+            String error = checkPassword(password);
+            if (error.isEmpty()) {
+                break;
+            }
+            System.out.println(error);
         }
 
-        // Sinh và nhập Captcha[cite: 1]
-        String captchaGen = generateCaptcha();
-        System.out.println(bundle.getString("captcha") + " " + captchaGen);
-        
-        String captchaInput;
-        while (true) {
-            System.out.print(bundle.getString("inputCaptcha") + " ");
-            captchaInput = scanner.nextLine().trim();
-            String errorMsg = checkCaptcha(captchaInput, captchaGen);
-            if (errorMsg.isEmpty()) break;
-            System.out.println(errorMsg);
-        }
+        addAccount(accountNumber, password);
+        System.out.println(bundle.getString("createSuccess"));
     }
 }

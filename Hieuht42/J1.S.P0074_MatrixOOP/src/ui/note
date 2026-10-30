@@ -1,0 +1,52 @@
+Mục tiêu:
+ - Định nghĩa một đối tượng (Object) Ma trận để chứa dữ liệu ma trận (data) và kích thước (rows, cols).
+ - Các phép toán (Cộng, Trừ, Nhân) được triển khai như các phương thức của đối tượng.
+
+ 1. Thuộc tính (Properties):
+ - private int rows: Số hàng của ma trận.
+ - private int cols: Số cột của ma trận.
+ - private int[][] data: Mảng 2 chiều chứa các phần tử của ma trận.
+
+ 2. Hàm Khởi tạo (Constructors):
+ - public Matrix(int rows, int cols): Khởi tạo ma trận rỗng với số hàng và cột xác định.
+ + Kiểm tra điều kiện: rows và cols phải **lớn hơn 0**. Nếu không, ném ra Exception.
+ - public Matrix(int[][] data): Khởi tạo ma trận từ một mảng 2 chiều có sẵn.
+ + Kiểm tra điều kiện: Mảng data không được null hoặc rỗng.
+
+ 3. Phương thức Phép toán (Operations):
+
+ - public Matrix add(Matrix other): Cộng ma trận hiện tại (this) với ma trận khác (other).
+ + Điều kiện: Kiểm tra rows và cols của hai ma trận phải bằng nhau. Nếu không, ném ra Exception.
+ + Logic: Cộng từng phần tử tương ứng: dataResult[i][j] = this.data[i][j] + other.data[i][j].
+ + Trả về: Một đối tượng Matrix mới chứa kết quả.
+
+ - public Matrix subtract(Matrix other): Trừ ma trận hiện tại (this) cho ma trận khác (other).
+ + Điều kiện: Kiểm tra rows và cols của hai ma trận phải bằng nhau. Nếu không, ném ra Exception.
+ + Logic: Trừ từng phần tử tương ứng: dataResult[i][j] = this.data[i][j] - other.data[i][j].
+ + Trả về: Một đối tượng Matrix mới chứa kết quả.
+
+ - public Matrix multiply(Matrix other): Nhân ma trận hiện tại (this) với ma trận khác (other).
+ + Điều kiện: Kiểm tra số cột của Matrix 1 (this.cols) phải bằng số hàng của Matrix 2 (other.rows). Nếu không, ném ra Exception.
+ + Logic: Thực hiện phép nhân ma trận 3 vòng lặp. dataResult[i][j] += this.data[i][k] * other.data[k][j].
+ + Kích thước ma trận kết quả: rows của Matrix 1 và cols của Matrix 2.
+ + Trả về: Một đối tượng Matrix mới chứa kết quả.
+
+ 4. Phương thức Hiển thị (Display):
+ - public String toString(): Ghi đè phương thức toString() để hiển thị ma trận một cách dễ đọc.
+ + Định dạng: In mỗi phần tử trong ngoặc vuông (ví dụ: [d]) và xuống dòng sau mỗi hàng.
+
+
+***Test case:
+-Nhập Liệu Kích Thước (rows, cols):
+    +Nhập số nguyên âm (Bắt nhập lại)
+    +Nhập số 0 (Bắt nhập lại)
+    +Nhập chữ cái (Bắt nhập lại)
+    +Nhập số thập phân (Bắt nhập lại)
+    +Nhập số không phải số nguyên (Bắt nhập lại)
+-Nhập Liệu Kích Thước Đặc Biệt (Trong Phép Toán):
+    +Cộng/Trừ: Nhập rows2 hoặc cols2 khác với rows1/cols1 (Bắt nhập lại, yêu cầu bằng).
+    +Nhân: Nhập rows2 khác với cols1 (Bắt nhập lại, yêu cầu bằng).
+-Phép Cộng (add) và Trừ (subtract)Kích thước hợp lệ:(Tính toán và trả về kết quả chính xác).
+    Kích thước không hợp lệ: Kích thước khác nhau (Ném Exception).
+-Phép Nhân (multiply)Kích thước hợp lệ: (Tính toán và trả về kết quả chính xác ).
+    Kích thước không hợp lệ:(Ném Exception).

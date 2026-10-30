@@ -3,23 +3,27 @@ package utils;
 import java.util.Scanner;
 
 public class Validate {
+
     private static final Scanner SCANNER = new Scanner(System.in);
 
-    // Hàm lấy lựa chọn menu an toàn
-    public static int getInt(String messageInfo, String messageErrorNumber, 
-                             String messageErrorOutOfRange, int min, int max) {
-        do {
+    public static int getInt(String messageInfo, String messageErrorNumber,
+            String messageErrorOutOfRange, int min, int max) {
+        while (true) {
             try {
                 System.out.print(messageInfo);
                 int number = Integer.parseInt(SCANNER.nextLine().trim());
                 if (number >= min && number <= max) {
                     return number;
-                } else {
-                    System.out.println(messageErrorOutOfRange);
                 }
+                System.out.println(messageErrorOutOfRange);
             } catch (NumberFormatException e) {
                 System.out.println(messageErrorNumber);
             }
-        } while (true);
+        }
+    }
+
+    public static String getString(String messageInfo) {
+        System.out.print(messageInfo);
+        return SCANNER.nextLine().trim();
     }
 }

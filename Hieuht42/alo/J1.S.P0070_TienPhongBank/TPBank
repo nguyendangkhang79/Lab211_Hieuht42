@@ -1,0 +1,52 @@
+//Yeu cau de bai:
+//- He thong dang nhap Ebank cua Tien Phong Bank ho tro 2 ngon ngu: Tieng Viet va Tieng Anh
+//- Hien thi Menu chinh gom 3 lua chon: 1. Vietnamese, 2. English, 3. Exit
+//- Neu chon 1 hoac 2: Chuyen doi ngon ngu tuong ung bang ResourceBundle (su dung file Vi.properties va En.properties)
+//- Thuc hien ham kiem tra Dang nhap bao gom:
+//  + Nhap so tai khoan: Phai la so va co do dai chinh xac la 10 chu so (su dung Regular Expression)
+//  + Nhap mat khau: Do dai tu 8 den 31 ky tu, phai bao gom ca ky tu chu va so (su dung Regular Expression)
+//  + Sinh ma Captcha: Tao ngau nhien mot chuoi ky tu bang ham Random roi chuyen thanh kieu char
+//  + Nhap va kiem tra Captcha: Su dung ham contains() de kiem tra chuoi ky tu nguoi dung nhap vao co ton tai trong ma Captcha vua sinh ra hay khong
+//- Co che lap (Loop Input): Neu nguoi dung nhap sai o bat ky buoc nao (Tai khoan, Mat khau, Captcha), he thong phai in ra thong bao loi bang ngon ngu da chon va yeu cau nhap lai ngay tai buoc do cho den khi dung.
+//
+//Giai thich thuat toan va logic xu ly:
+//- Da ngon ngu (ResourceBundle): Doc du lieu tu file properties theo Key. Khi chon ngon ngu nao, he thong se tai file tuong ung de hien thi thong bao.
+//- Kiem tra so tai khoan: Su dung bieu thuc chinh quy de dam bao chuoi nhap vao chi chua cac ky so tu '0' den '9' va dem du 10 ky tu.
+//- Kiem tra mat khau: Su dung bieu thuc chinh quy de kiem soat do dai (8-31 ky tu) va bat buoc phai co su xuat hien cua it nhat mot chu cai va mot chu so.
+//- Xu ly Captcha: He thong tu dong sinh ra chuoi ma ngau nhien truoc khi yeu cau nhap. Ham kiem tra su dung .contains() nghia la chuoi nguoi dung nhap chi can la mot phan (hoac khop hoan toan) voi chuoi goc thi duoc tinh la hop le.
+//
+//Test
+//
+//- Test Menu & Ngon ngu:
+//+ Truong hop chon 1: Giao dien chuyen sang Tieng Viet thanh cong va bat dau quy trinh dang nhap bang Tieng Viet
+//+ Truong hop chon 2: Giao dien chuyen sang Tieng Anh thanh cong va bat dau quy trinh dang nhap bang Tieng Anh
+//+ Truong hop chon 3: Chuong trinh dung hoat dong va thoat thanh cong
+//+ Truong hop nhap so ngoai danh sach (vi du: 4, 5) hoac nhap ky tu, khoang trang: He thong bao loi va yeu cau chon lai
+//
+//- Test input (nhap So tai khoan):
+//+ Truong hop nhap ky tu chu (vi du: aaaaaaaaaa)
+//+ Truong hop nhap vua chu vua so (vi du: a123456789)
+//+ Truong hop nhap thieu chu so (< 10 so, vi du: 123456789)
+//+ Truong hop nhap du chu so (> 10 so)
+//+ Truong hop nhap khoang trang hoac bo trong
+//+ Truong hop nhap dung 10 chu so hop le (vi du: 0123456789) -> Chuyen sang buoc nhap mat khau
+//
+//- Test input (nhap Mat khau):
+//+ Truong hop nhap mat khau qua ngan (< 8 ky tu, vi du: 1)
+//+ Truong hop nhap mat khau qua dai (> 31 ky tu, chuoi 32 ky tu)
+//+ Truong hop nhap mat khau du dai nhung chi co so (vi du: 12345678)
+//+ Truong hop nhap mat khau du dai nhung chi co chu (vi du: aaaaaaaa)
+//+ Truong hop nhap khoang trang hoac bo trong
+//+ Truong hop nhap dung dinh dang gom ca chu va so tu 8-31 ky tu (vi du: 123456ab) -> Chuyen sang buoc hien thi va nhap Captcha
+//
+//- Test input (nhap Captcha - Gia su ma sinh ra la H9MOA):
+//+ Truong hop nhap sai hoan toan chuoi ky tu (vi du: Adafda)
+//+ Truong hop nhap khoang trang hoac bo trong
+//+ Truong hop nhap dung 1 ky tu hoac chuoi ky tu nam trong ma goc (vi du: H hoac 9 hoac H9) -> Dang nhap thanh cong
+//
+//- Test output:
+//+ Hien thi dung cau thong bao moi nhap theo ngon ngu da chon
+//+ Hien thi dung thong bao loi bang Tieng Viet khi chon Tieng Viet va nhap sai thong tin
+//+ Hien thi dung thong bao loi bang Tieng Anh khi chon Tieng Anh va nhap sai thong tin
+//+ Hien thi dung chuoi Captcha ngau nhien vua duoc sinh ra
+//+ Hien thi thong bao dang nhap thanh cong va ket thuc luong xu ly khi tat ca thong tin hop le

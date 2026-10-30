@@ -12,18 +12,22 @@ public class Main {
             int choice = Validate.getInt("Your choice:",
                     "Please enter a number.",
                     "Please enter 1 to 4.", 1, 4);
-            switch (choice) {
-                case 1:
-                    calculator.addition();
-                    break;
-                case 2:
-                    calculator.subtraction();
-                    break;
-                case 3:
-                    calculator.multiplication();
-                    break;
-                case 4:
-                    return;
+            try {
+                switch (choice) {
+                    case 1:
+                        calculator.addition();
+                        break;
+                    case 2:
+                        calculator.subtraction();
+                        break;
+                    case 3:
+                        calculator.multiplication();
+                        break;
+                    case 4:
+                        return;
+                }
+            } catch (ArithmeticException e) {
+                System.out.println("Result is out of range of integer");
             }
         }
     }

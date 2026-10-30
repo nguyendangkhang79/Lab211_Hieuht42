@@ -12,7 +12,7 @@ public class Calculator {
         int[][] result = new int[row][column];
         for (int i = 0; i < row; i++) {
             for (int j = 0; j < column; j++) {
-                result[i][j] = matrix1[i][j] + matrix2[i][j];
+                result[i][j] = Math.addExact(matrix1[i][j], matrix2[i][j]);
             }
         }
         return result;
@@ -24,7 +24,7 @@ public class Calculator {
         int[][] result = new int[row][column];
         for (int i = 0; i < row; i++) {
             for (int j = 0; j < column; j++) {
-                result[i][j] = matrix1[i][j] - matrix2[i][j];
+                result[i][j] = Math.subtractExact(matrix1[i][j], matrix2[i][j]);
             }
         }
         return result;
@@ -38,7 +38,8 @@ public class Calculator {
         for (int i = 0; i < row; i++) {
             for (int j = 0; j < column; j++) {
                 for (int k = 0; k < common; k++) {
-                    result[i][j] += matrix1[i][k] * matrix2[k][j];
+                    result[i][j] = Math.addExact(result[i][j],
+                            Math.multiplyExact(matrix1[i][k], matrix2[k][j]));
                 }
             }
         }

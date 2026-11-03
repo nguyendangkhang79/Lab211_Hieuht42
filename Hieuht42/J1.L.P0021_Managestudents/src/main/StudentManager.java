@@ -9,6 +9,20 @@ import model.Student;
 public class StudentManager {
 
     private final ArrayList<Student> students = new ArrayList<>();
+    private int count = 10;
+
+    public StudentManager() {
+        students.add(new Student("FPT01", "Khang", "FA26", "Java"));
+        students.add(new Student("FPT02", "Khanh", "FA26", ".Net"));
+        students.add(new Student("FPT03", "Long", "FA26", "Java"));
+        students.add(new Student("FPT04", "Linh", "FA26", "Java"));
+        students.add(new Student("FPT05", "Minh", "FA26", ".Net"));
+        students.add(new Student("FPT06", "Vuong", "FA26", "Java"));
+        students.add(new Student("FPT07", "Hanh", "FA26", ".Net"));
+        students.add(new Student("FPT08", "Thanh", "FA26", "Java"));
+        students.add(new Student("FPT09", "An", "FA26", "Java"));
+        students.add(new Student("FPT10", "Nhi", "FA26", ".Net"));
+    }
 
     public int size() {
         return students.size();
@@ -22,19 +36,24 @@ public class StudentManager {
         students.add(student);
     }
 
-    public String findNameById(String id) {
+    public String findIdByName(String name) {
         for (Student student : students) {
-            if (student.getId().equalsIgnoreCase(id)) {
-                return student.getStudentName();
+            if (student.getStudentName().equalsIgnoreCase(name)) {
+                return student.getId();
             }
         }
         return null;
     }
 
-    public boolean isDuplicate(String id, String semester, String courseName, Student ignored) {
+    public String generateId() {
+        count++;
+        return String.format("FPT%02d", count);
+    }
+
+    public boolean isDuplicate(String name, String semester, String courseName, Student ignored) {
         for (Student student : students) {
             if (student != ignored
-                    && student.getId().equalsIgnoreCase(id)
+                    && student.getStudentName().equalsIgnoreCase(name)
                     && student.getSemester().equalsIgnoreCase(semester)
                     && student.getCourseName().equals(courseName)) {
                 return true;
@@ -98,7 +117,7 @@ public class StudentManager {
 
     private Report findReport(ArrayList<Report> reports, Student student) {
         for (Report report : reports) {
-            if (report.getId().equalsIgnoreCase(student.getId())
+            if (report.getStudentName().equalsIgnoreCase(student.getStudentName())
                     && report.getCourseName().equals(student.getCourseName())) {
                 return report;
             }

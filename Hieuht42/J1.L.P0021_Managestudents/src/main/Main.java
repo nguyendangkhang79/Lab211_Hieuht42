@@ -37,20 +37,18 @@ public class Main {
     private static void create() {
         while (true) {
             System.out.println("----- Student " + (MANAGER.size() + 1) + " -----");
-            String id = Validate.getString("Enter ID: ").toUpperCase();
-            String name = MANAGER.findNameById(id);
-            if (name == null) {
-                name = Validate.getString("Enter student name: ");
-            } else {
-                System.out.println("Student name: " + name);
-            }
+            String name = Validate.getString("Enter student name: ");
             String semester = Validate.getString("Enter semester: ");
             String course = Validate.getCourse("Enter course name (Java, .Net, C/C++): ");
-            if (MANAGER.isDuplicate(id, semester, course, null)) {
+            if (MANAGER.isDuplicate(name, semester, course, null)) {
                 System.out.println("Student already exists.");
             } else {
+                String id = MANAGER.findIdByName(name);
+                if (id == null) {
+                    id = MANAGER.generateId();
+                }
                 MANAGER.addStudent(new Student(id, name, semester, course));
-                System.out.println("Add student successfully.");
+                System.out.println("Add student successfully. ID: " + id);
             }
             if (MANAGER.size() >= MIN_STUDENTS
                     && Validate.getOption("Do you want to continue (Y/N)? ", "Y", "N").equals("N")) {
@@ -70,9 +68,9 @@ public class Main {
             System.out.println("Not found student.");
             return;
         }
-        System.out.printf("%-20s%-15s%s%n", "Student name", "Semester", "Course Name");
+        System.out.printf("%-10s%-20s%-15s%s%n", "ID", "Student name", "Semester", "Course Name");
         for (Student student : result) {
-            System.out.printf("%-20s%-15s%s%n", student.getStudentName(),
+            System.out.printf("%-10s%-20s%-15s%s%n", student.getId(), student.getStudentName(),
                     student.getSemester(), student.getCourseName());
         }
     }
@@ -82,7 +80,7 @@ public class Main {
             System.out.println("List is empty.");
             return;
         }
-        String id = Validate.getString("Enter ID: ").toUpperCase();
+        String id = Validate.getId("Enter ID: ");
         ArrayList<Student> found = MANAGER.findById(id);
         if (found.isEmpty()) {
             System.out.println("Not found student.");
@@ -114,7 +112,7 @@ public class Main {
         String name = Validate.getString("Enter student name: ");
         String semester = Validate.getString("Enter semester: ");
         String course = Validate.getCourse("Enter course name (Java, .Net, C/C++): ");
-        if (MANAGER.isDuplicate(student.getId(), semester, course, student)) {
+        if (MANAGER.isDuplicate(name, semester, course, student)) {
             System.out.println("Student already exists.");
             return;
         }

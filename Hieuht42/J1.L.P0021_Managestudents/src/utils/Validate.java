@@ -18,6 +18,16 @@ public class Validate {
         }
     }
 
+    public static String getId(String message) {
+        while (true) {
+            String input = getString(message).toUpperCase();
+            if (input.matches("FPT\\d{2}")) {
+                return input;
+            }
+            System.out.println("ID must be FPTxx (example: FPT01).");
+        }
+    }
+
     public static int getInt(String message, int min, int max) {
         while (true) {
             try {
